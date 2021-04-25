@@ -5,10 +5,14 @@
 
 ## Welcome to Porto
 
+
 - [Introduction](#Introduction)
 - [Getting Started](#Getting-Started)
+	- [Layers Overview](#Layers-Overview)
 	- [1) Ship Layer](#Ship-Layer)
 	- [2) Containers Layer](#Containers-Layer)
+		- [Containers](#Containers)
+		- [Sections](#Sections)
 - [Components](#Components)
 	- [1) Main Components](#Main-Components)
 		- [1.1) Components Interaction Diagram](#Components-Interaction-Diagram)
@@ -82,6 +86,10 @@ It started as an experimental architecture, aiming at solving the common problem
 
 At its core Porto consists of 2 layers "folders" `Containers` & `Ship`. 
 
+- **The Containers layer** holds all your application business logic code.
+- **The Ship layer** holds the infrastructure code (your shared code between all Containers).
+
+
 These layers can be created anywhere inside any framework of choice.
 
 *(Example: in Laravel or Rails they can be created in the `app/` directory or in a new `src/` directory at the root.)*
@@ -100,7 +108,7 @@ These layers can be created anywhere inside any framework of choice.
 ![](/assets/porto_visual_diagram.png)
 
 
-Before explaining where each type of code should be placed, let's understand the different levels of code we will have:
+Before diving deeper, let's understand the different levels of code we will have in your code base:
 
 #### Code Levels
 
@@ -140,9 +148,11 @@ In Porto terms a Monolithic is equal to one cargo ship of Containers, while Micr
 
 Porto offers the flexibility to start small with a single well organized Monolithic service and grow whenever you need, by extracting containers into multiple services as your team grows.
 
+This is possible becuase Porto organizes your code into Containers, which are grouped into isolated Sections. A section can be later extracted out with all it's related containers to be depolyed separatly as you scale.
+
 As you can imagine operating two or more ships in the sea rather than a single one, will increase the cost of maintenance (two repositories, two CI pipelines,...) but also gives you flexibility, where each ship can run at different speed and direction. This technially translates to each service scaling differently based on the traffic it expect.
 
-How services communicate together is completely up to the developers.
+How Sections "Services" communicate together is completely up to the developers, even though Porto recomands using Events and/or Commands.
 
 
 <br>
@@ -167,7 +177,7 @@ The Ship layer, also plays an important role in separating the Application code 
 
 In Porto the Ship layer is very slim, it does NOT contain common reusable functionalities such as Authentication or Authorization, since all these functionalities are provided by Containers, to be replaced whenever needed. Giving the developers more flexibility.
 
-
+<br>
 
 
 
@@ -208,9 +218,19 @@ The Ship Parents holds your custom Application shared business logic, while the 
 
 Porto manages the complexity of a problem by breaking it down to smaller manageable Containers.
 
-The Containers layer is where the Application specific business logic lives *(Application features/functionalities)*. You will spend 90% of your time at this layer, creating Components.
+The Containers layer is where the Application specific business logic lives *(Application features/functionalities)*. You will spend 90% of your time at this layer.
 
-Here's an example of how Containers are generated:
+
+<br>
+
+
+<a id="Containers"></a>
+### Containers
+
+A Container can be a **feature**, or can be a wrapper around a RESTful API resource, or anything else.
+
+
+#### Example 1:
 
 "In a TODO App, the 'Task', 'User' and 'Calendar' objects each would live in a different Container, were each has its own Routes, Controllers, Models, Exceptions, etc. And each Container is responsible for receiving requests and returning responses from whichever supported UI (Web, API..)."
 
@@ -222,17 +242,16 @@ Unless you want to use both Models always together, do split them into 2 Contain
 
 Note: if you have high dependecies between two containers by nature, than placing them in the same Section would make reusing them easier in other projects.
 
+#### Example 2:
 
-
-
-
+If you look at [Apiato](http://apiato.io) (the first project implementing Porto), you will notice that Authentication and Authorization are both features provided as Containers.
 
 
 
 
 
 <a id="Containers-Structure"></a>
-### Basic Containers Structure
+#### Basic Containers Structure
 
 ```
 Container 1
@@ -281,12 +300,12 @@ Container 2
 
 
 <a id="Containers-Interactions"></a>
-### Containers Communications & Relations
+#### Containers Communication
 
-- A Container MAY depends on one or many other Containers. *(Preferably wihin the same section.)*
+- A Container MAY depends on one or many other Containers. *(Wihin the same Section.)*
 - A Controller MAY call Tasks from another Container.
 - A Model MAY have a relationship with a Model from another Containers.
-- Other forms of communications are also possible, such as Listening to Events fired by other Containers.
+- Other forms of communications are also possible, such as via Events and Commands.
 
 *If you use Event based communcations between containers, you could use the same mechanism after spliting your code base into multi services.*
 
@@ -299,32 +318,51 @@ Container 2
 
 
 
+<a id="Sections"></a>
+### Sections
+
+Section are another very important aspect in the Porto architecture.
 
 
+A **Section** is a group of related containers. It can be a **service** _(micro or bigger)_, or a sub-system within the main system, or antyhing else.
 
-<a id="Containers-Sections"></a>
-### Containers Sections
-
-Container `Sections` are another very important aspect in the Porto architecture.
 
 *Think of a Section as a rows of containers on a cargo ship. Well organized containers in rows, speeds up the loading and unloading of related containers for a specific customer.*
 
-To avoid having tens of containers on the root of your containers folder, you can group related Containers into Sections.
 
-The basic definition of a Section is a folder that contains related Containers. However the benifits are huge. Think of Sections as bounded context, where each section represents a portion of your system. 
+The basic definition of a Section is a folder that contains related Containers. However the benifits are huge. (A section is equivalent to a bounded context from the Domain-driven design) Each section represents a portion of your system and is completely isolated from other sections. 
 
-Example: if you're building a racing game like Need for Speed, you may have the following two sections: the Race Section and the Lobby Section, where each section contains a Car Container and a Car Model inside it, but with different properties and functions. 
-In this example the Car Model of the Race section can contain the business logic for accelerating and controlling the car, while the Car Model of the Lobby Section contains the business logic for customizing the car before the race.
+A Section can be deployed separatly.
+
+
+#### Example 1:
+
+If you're building a racing game like Need for Speed, you may have the following two sections: the Race Section and the Lobby Section, where each section contains a Car Container and a Car Model inside it, but with different properties and functions. 
+In this example the Car Model of the Race section can contain the business logic for accelerating and controlling the car, while the Car Model of the Lobby Section contains the business logic for customizing the car (color, accessories..) before the race.
 
 Sections allows separating large Model into smaller ones. And they can provide boundaries for different Models in your system.
 
 If you prefer simplicity or you have only single team working on the project, you can have no Sections at all (where all Containers live in the containers folder) which means your project is a single section. In this case if the project grew quickly and you decided you need to start using sections, you can make a new project also with a single section, this is known as Micro-Services. In Micro-Services each section "project portion" live in its own project (repository) and they can communicate over the network usually using the HTTP protocol.
 
+
+#### Example 2:
+
+In a typical e-commerce application you can have the following sections: Inventory Section, Shipping Section, Order Section, Payment Section, Catalog Section and more...
+
+As you can imagine each of these Sections can be a micro-service by itself. And can be extracted and deployed on its own server based on the traffic it receives.
+
+
+
+
+
+<a id="Sections-Interactions"></a>
+#### Sections Communication
+
+- A Section MUST be isolated and SHOULD NOT depends on any other Section.
+- A Section MAY listen to Events fired by other Sections. (Commands can be used as alternative to Events).
+
+
 <br>
-
-
-
-
 
 
 
