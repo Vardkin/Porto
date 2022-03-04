@@ -50,7 +50,7 @@
 
 Porto is a great option for medium to large sized web projects, as they tend to have higher complexity over time. 
 
-With Porto developers can build super scalable monolithics, which can be easily splitted into multiple micro-services whenever needed.
+With Porto developers can build super scalable monolithics, which can be easily split into multiple micro-services whenever needed.
 While enabling the reusability of the business logic *(Application Features)*, across multiple projects.
 
 **Porto** inherits concepts from the **DDD** *(Domain Driven Design)*, **Modular**, **Micro Kernel**, **MVC** *(Model View Controller)*, **Layered** and **ADR** *(Action Domain Responder)* architectures. 
@@ -144,15 +144,15 @@ The Containers layer (cargo containers) `>> relies >>` on the Ship layer (cargo 
 
 Porto is designed to scale with you! While most companies shift from Monolithic to Micro-Services *(and most recently Serverless)* as they scale up. Porto offers the flexibility to deflate your Monolithic into Micro-Services (or SOA) at any time with the least effort possible.
 
-In Porto terms a Monolithic is equal to one cargo ship of Containers, while Micro Services is equal to multiple cargo ships of Containers. *(Disregarding their sizes).*
+In Porto terms, a Monolithic is equal to one cargo ship of Containers, while Micro Services are equal to multiple cargo ships of Containers. *(Disregarding their sizes).*
 
 Porto offers the flexibility to start small with a single well organized Monolithic service and grow whenever you need, by extracting containers into multiple services as your team grows.
 
-This is possible becuase Porto organizes your code into Containers, which are grouped into isolated Sections. A section can be later extracted out with all it's related containers to be depolyed separatly as you scale.
+This is possible because Porto organizes your code into Containers, which are grouped into isolated Sections. A section can be later extracted out with all of its related containers to be deployed separately as you scale.
 
-As you can imagine operating two or more ships in the sea rather than a single one, will increase the cost of maintenance (two repositories, two CI pipelines,...) but also gives you flexibility, where each ship can run at different speed and direction. This technially translates to each service scaling differently based on the traffic it expect.
+As you can imagine operating two or more ships in the sea rather than a single one, will increase the cost of maintenance (two repositories, two CI pipelines,...) but also gives you flexibility, where each ship can run at different speed and direction. This technically translates to each service scaling differently based on the traffic it expects.
 
-How Sections "Services" communicate together is completely up to the developers, even though Porto recomands using Events and/or Commands.
+How Sections "Services" communicate together is completely up to the developers, even though Porto recommends using Events and/or Commands.
 
 
 <br>
@@ -240,7 +240,7 @@ It's advised to use a Single Model per Container, however in some cases you may 
 Just keep in mind two Models means two Repositories, two Transformers, etc.
 Unless you want to use both Models always together, do split them into 2 Containers.
 
-Note: if you have high dependecies between two containers by nature, than placing them in the same Section would make reusing them easier in other projects.
+Note: if you have high dependencies between two containers by nature, then placing them in the same Section would make reusing them easier in other projects.
 
 #### Example 2:
 
@@ -302,12 +302,12 @@ Container 2
 <a id="Containers-Interactions"></a>
 #### Containers Communication
 
-- A Container MAY depends on one or many other Containers. *(Wihin the same Section.)*
+- A Container MAY depends on one or many other Containers. *(Within the same Section.)*
 - A Controller MAY call Tasks from another Container.
 - A Model MAY have a relationship with a Model from another Containers.
 - Other forms of communications are also possible, such as via Events and Commands.
 
-*If you use Event based communcations between containers, you could use the same mechanism after spliting your code base into multi services.*
+*If you use Event based communications between containers, you could use the same mechanism after splitting your code base into multi services.*
 
 > Note: If you're not familiar with separating your code into Modules/Domains, or for some reason you don't prefer that approach. You can create your entire Application in a single Container. (Not recommended but absolutely possible).
 
@@ -321,33 +321,33 @@ Container 2
 <a id="Sections"></a>
 ### Sections
 
-Section are another very important aspect in the Porto architecture.
+Sections are another very important aspect in the Porto architecture.
 
 
-A **Section** is a group of related containers. It can be a **service** _(micro or bigger)_, or a sub-system within the main system, or antyhing else.
+A **Section** is a group of related containers. It can be a **service** _(micro or bigger)_, or a sub-system within the main system, or anything else.
 
 
-*Think of a Section as a rows of containers on a cargo ship. Well organized containers in rows, speeds up the loading and unloading of related containers for a specific customer.*
+*Think of a Section as a row of containers on a cargo ship. Well organized containers in rows, speeds up the loading and unloading of related containers for a specific customer.*
 
 
-The basic definition of a Section is a folder that contains related Containers. However the benifits are huge. (A section is equivalent to a bounded context from the Domain-driven design) Each section represents a portion of your system and is completely isolated from other sections. 
+The basic definition of a Section is a folder that contains related Containers. However, the benefits are huge. (A section is equivalent to a bounded context from the Domain-driven design) Each section represents a portion of your system and is completely isolated from other sections. 
 
-A Section can be deployed separatly.
+A Section can be deployed separately.
 
 
 #### Example 1:
 
 If you're building a racing game like Need for Speed, you may have the following two sections: the Race Section and the Lobby Section, where each section contains a Car Container and a Car Model inside it, but with different properties and functions. 
-In this example the Car Model of the Race section can contain the business logic for accelerating and controlling the car, while the Car Model of the Lobby Section contains the business logic for customizing the car (color, accessories..) before the race.
+In this example the Car Model of the Race section can contain the business logic for accelerating and controlling the car, while the Car Model of the Lobby Section contains the business logic for customizing the car (color, accessories...) before the race.
 
 Sections allows separating large Model into smaller ones. And they can provide boundaries for different Models in your system.
 
-If you prefer simplicity or you have only single team working on the project, you can have no Sections at all (where all Containers live in the containers folder) which means your project is a single section. In this case if the project grew quickly and you decided you need to start using sections, you can make a new project also with a single section, this is known as Micro-Services. In Micro-Services each section "project portion" live in its own project (repository) and they can communicate over the network usually using the HTTP protocol.
+If you prefer simplicity or you have only single team working on the project, you can have no Sections at all (where all Containers live in the containers folder) which means your project is a single section. In this case if the project grew quickly and you decided you need to start using sections, you can make a new project also with a single section, this is known as Micro-Services. In Micro-Services, each section "project portion" lives in its own project (repository) and they can communicate over the network usually using the HTTP protocol.
 
 
 #### Example 2:
 
-In a typical e-commerce application you can have the following sections: Inventory Section, Shipping Section, Order Section, Payment Section, Catalog Section and more...
+In a typical e-commerce application, you can have the following sections: Inventory Section, Shipping Section, Order Section, Payment Section, Catalog Section and more...
 
 As you can imagine each of these Sections can be a micro-service by itself. And can be extracted and deployed on its own server based on the traffic it receives.
 
@@ -374,9 +374,9 @@ As you can imagine each of these Sections can be a micro-service by itself. And 
 
 In the Container layer there's a set of `Components` "Classes" with predefined responsibilities. 
 
-Every single piece of code you write should live in a Component (class function). Porto defines a huge list of those Components for you, with a set guidelines to follow when using them, to keep the development process smooth.
+Every single piece of code you write should live in a Component (class function). Porto defines a huge list of those Components for you, with a set of guidelines to follow when using them, to keep the development process smooth.
 
-Components ensures consistency and make your code easier to maintain as you already know where each piece of code should be found.
+Components ensure consistency and make your code easier to maintain as you already know where each piece of code should be found.
 
 
 <a id="Components-Types"></a>
@@ -442,7 +442,7 @@ Routes - Controllers - Requests - Actions - Tasks - Models - Views - Transformer
 4. `Request` injected in the `Controller` automatically applies the request validation & authorization rules.
 5. `Controller` calls an `Action` and pass each `Request` data to it.
 6. `Action` do the business logic, *OR can call as many `Tasks` as needed to do the reusable subsets of the business logic*.
-7. `Tasks` do a reusable subsets of the business logic (A `Task` can do a single portion of the main Action).
+7. `Tasks` do a reusable subset of the business logic (A `Task` can do a single portion of the main Action).
 8. `Action` prepares data to be returned to the `Controller`, *some data can be collected from the `Tasks`*.
 9. `Controller` builds the response using a `View` (or `Transformer`) and send it back to the **User**.
 
@@ -560,7 +560,7 @@ Requests can also check the Authorization, e.g. check if this user has access to
 #### Principles:
 - A Request MAY hold the Validation / Authorization rules.
 - Requests SHOULD only be injected in Controllers. Once injected they automatically check if the request data matches the validation rules, and if the request input is not valid an Exception will be thrown.
-- Requests MAY also be used for authorization, they can check if the user is authorized to make a request.
+- Requests MAY also be used for authorization; they can check if the user is authorized to make a request.
 
 ***
 
@@ -584,7 +584,7 @@ Actions represent the Use Cases of the Application *(the actions that can be tak
 
 Actions CAN hold business logic or/and they orchestrate the Tasks to perform the business logic.
 
-Actions take data structures as inputs, manipulates them according to the business rules internally or through some Tasks, then output a new data structures.
+Actions take data structures as inputs, manipulate them according to the business rules internally or through some Tasks, then output a new data structures.
 
 Actions SHOULD NOT care how the Data is gathered, or how it will be represented.
 
@@ -621,27 +621,27 @@ And by looking at all the Actions you can tell what an Application can do.
 <Summary>Tasks</Summary>
 <br>
 
-The Tasks are the classes that hold the shared business logic between multiple Actions accross different Containers.
+The Tasks are the classes that hold the shared business logic between multiple Actions across different Containers.
 
 Every Task is responsible for a small part of the logic.
 
-Tasks are optional, but in most cases you find yourself in need for them.
+Tasks are optional, but in most cases, you find yourself in need of them.
 
 Example: if you have Action 1 that needs to find a record by its ID from the DB, then fires an Event.
 And you have an Action 2 that needs to find the same record by its ID, then makes a call to an external API.
-Since both actions are performing the "find a record by ID" logic, we can take that business logic and put it in it's own class, that class is the Task. This Task is now reusable by both Actions and any other Action you might create in the future.
+Since both actions are performing the "find a record by ID" logic, we can take that business logic and put it in its own class, that class is the Task. This Task is now reusable by both Actions and any other Action you might create in the future.
 
-The rule is, whenever you see the possibility of reusing a piece of code from an Action, you should put that piece of code in a Task. Do not blindly create Tasks for everything, you can always start with writing all the business logic in an Action and only when you need to reuse it, create an a dedicated Task for it. (Refactoring is essential to adapt to the code growth).
+The rule is, whenever you see the possibility of reusing a piece of code from an Action, you should put that piece of code in a Task. Do not blindly create Tasks for everything, you can always start with writing all the business logic in an Action and only when you need to reuse it, create a dedicated Task for it. (Refactoring is essential to adapt to the code growth).
 
 #### Principles:
 - Every Task SHOULD have a single responsibility (job).
 - A Task MAY receive and return Data. (Task SHOULD NOT return a response, the Controller's job is to return a response).
-- A Task SHOULD NOT call another Task. Because that will takes us back to the Services Architecture and it's a big mess.
+- A Task SHOULD NOT call another Task. Because that will take us back to the Services Architecture and it's a big mess.
 - A Task SHOULD NOT call an Action. Because your code wouldn't make any logical sense then!
 - Tasks SHOULD only be called from Actions. (They could be called from Actions of other Containers as well!).
-- Tasks usually have a single function `run()`. However, they can have more functions with explicit names if needed. *Making the Task class replace the ugly concept of function flags.* Example: the `FindUserTask` can have 2 functions `byId` and `byEmail`, **all internal functions MUST call the `run` function**. In this example the `run` can be called at the end of both funtions, after appending Criteria to the repository.
+- Tasks usually have a single function `run()`. However, they can have more functions with explicit names if needed. *Making the Task class replace the ugly concept of function flags.* Example: the `FindUserTask` can have 2 functions `byId` and `byEmail`, **all internal functions MUST call the `run` function**. In this example the `run` can be called at the end of both functions, after appending Criteria to the repository.
 - A Task SHOULD NOT be called from Controller. Because this leads to non-documented features in your code. It's totally fine to have a lot of Actions "example: `FindUserByIdAction` and `FindUserByEmailAction` where both Actions are calling the same Task" as well as it's totally fine to have single Action `FindUserAction` making a decision to which Task it should call.
-- A Task SHOULD NOT accept a Request object in any of its functions. It can take anything in its funtions parameters but never a Request object. This will keep free to use from anwyhere, and can be tested independently.
+- A Task SHOULD NOT accept a Request object in any of its functions. It can take anything in its functions parameters but never a Request object. This will keep free to use from anywhere, and can be tested independently.
 
 ***
 
@@ -666,7 +666,7 @@ The Models provide an abstraction for the data, they represent the data in the d
 Models are responsible for how the data should be handled. They make sure that data arrives properly into the backend store (e.g. Database).
 
 #### Principles:
-- A Model SHOULD NOT hold business logic, it can only hold the code and data that represents itself. *(it's relationships with other models, hidden fields, table name, fillable attributes,...)*
+- A Model SHOULD NOT hold business logic, it can only hold the code and data that represents itself. *(it's relationships with other models, hidden fields, table name, fillable attributes...)*
 - A single Container MAY contain multiple Models.
 - A Model MAY define the Relations between itself and any other Models (in case a relation exist).
 
@@ -717,7 +717,7 @@ Their main goal is to separate the application logic from the presentation logic
 
 Transformers (are the short name for Responses Transformers).
 
-They are equivalent to Views but for JSON Responses. While Views takes data and represent it in HTML, Transformers takes data and represent it in JSON.
+They are equivalent to Views but for JSON Responses. While Views take data and represent it in HTML, Transformers take data and represent it in JSON.
 
 Transformers are classes responsible for transforming Models into Arrays.
 
@@ -727,7 +727,7 @@ Transformers takes a Model or a group of Models "Collection" and converts it to 
 - All API responses MUST be formatted via Transformers.
 - Every Model (that gets returned by an API call) SHOULD have a Transformer.
 - A single Container MAY have multiple Transformers.
-- Usually every Model would have a Transformer.
+- Usuall, every Model would have a Transformer.
 
 ***
 
@@ -754,7 +754,7 @@ Exceptions are also a form of output that should be expected (like an API except
 - Tasks, Sub-Tasks, Models and any class in general can throw a very specific Exception.
 - The caller MUST handle all expected Exceptions from the called class.
 - Actions MUST handle all Exceptions, and making sure they don't leak to upper Components, and cause unexpected behaviors.
-- Exceptions names SHOULD be as specific as possible and they SHOULD have a clear descriptive messages.
+- Exception's names SHOULD be as specific as possible and they SHOULD have a clear descriptive message.
 
 ***
 
